@@ -247,8 +247,119 @@ The default `error_patterns.json` includes 32 common error patterns covering:
 - ✅ Format string errors (printf/scanf)
 - ✅ Pointer type issues
 
-## 🤝 Contributing
+Our system also implements a hybrid confidence scoring mechanism:
 
+Static Analysis: Evaluates regex pattern complexity
+Dynamic Learning: Adjusts based on user feedback
+Weighted Ensemble: Combines multiple confidence sources
+
+python friendlyCompiler.py test.c --collect-feedback
+```
+
+This will ask after each error:
+```
+[?] Was this explanation helpful? (y/n/Enter to skip): 
+```
+
+#### **C. Enhanced Statistics**
+When using `--show-stats`, you now see:
+```
+[Most Used Patterns]
+  pattern_000: 5 uses | Success: 95% | High
+  pattern_001: 3 uses | Success: 80% | Medium
+```
+
+### **3. How It Works:**
+```
+┌─────────────────────────────────────────┐
+│ First Time Pattern Matches              │
+├─────────────────────────────────────────┤
+│ 1. Base confidence: 0.95 (from JSON)   │
+│ 2. Pattern analysis: 0.75              │
+│ 3. No feedback yet                      │
+│ 4. Final: 0.5 × 0.95 + 0.5 × 0.75      │
+│    = 0.85 (shown to user)              │
+└─────────────────────────────────────────┘
+
+┌─────────────────────────────────────────┐
+│ After 10 Uses (8 helpful, 2 not)       │
+├─────────────────────────────────────────┤
+│ 1. Base confidence: 0.95               │
+│ 2. Pattern analysis: 0.75              │
+│ 3. User feedback: 0.80 (8/10)          │
+│ 4. Final: 0.2×0.95 + 0.3×0.75 + 0.5×0.80│
+│    = 0.815 (adjusted down!)            │
+└─────────────────────────────────────────┘
+
+---
+
+## **New Files Created:**
+
+When you run the program, it creates:
+confidence_stats.json  # Stores usage statistics
+
+With Feedback Collection:
+
+python friendlyCompiler.py test.c --collect-feedback
+
+**Output:**
+======================================================================
+ERROR #1 | Line 5, Column 15 | ERROR
+======================================================================
+
+[What went wrong]
+  You're missing a semicolon (;) or comma (,)...
+
+[Confidence] ######## 85%
+
+[?] Was this explanation helpful? (y/n/Enter to skip): y
+[+] Thanks! This helps improve the system.
+
+With Statistics:
+python friendlyCompiler.py test.c --show-stats --collect-feedback
+```
+
+**Shows at the end:**
+```
+======================================================================
+[ERROR STATISTICS]
+======================================================================
+
+Total errors/warnings: 3
+Successfully translated: 3/3 (100%)
+
+[Error Type Breakdown]
+  syntax_error              ### (3)
+
+[Most Used Patterns]
+  pattern_000: 3 uses | Success: 100% | High
+
+📈 Confidence Evolution Example:
+
+  {
+  "regex": "expected.*[;,].*before",
+  "confidence": 0.95
+}
+```
+
+**Timeline:**
+```
+Day 1 (No usage data):
+├─ Calculated: 0.85 (blend of base 0.95 + pattern analysis 0.75)
+└─ Shown to user: 85%
+
+Day 2 (5 uses, all helpful):
+├─ User feedback: 1.00 (5/5)
+├─ Calculated: 0.2×0.95 + 0.3×0.75 + 0.5×1.00 = 0.915
+└─ Shown to user: 92%
+
+Day 7 (25 uses, 20 helpful):
+├─ User feedback: 0.80 (20/25)
+├─ Calculated: 0.2×0.95 + 0.3×0.75 + 0.5×0.80 = 0.815
+└─ Shown to user: 82% (adjusted down because real usage is 80%)
+
+
+## 🤝 Contributing
 To add more patterns:
 1. Find a new GCC error message
 2. Test your regex pattern
@@ -260,14 +371,7 @@ To add more patterns:
 
 Free to use for educational purposes. Perfect for Compiler Design courses!
 
-## 🎯 Learning Outcomes
 
-By working on this project, you'll understand:
-- How compilers detect and report errors
-- Pattern matching and regex in compiler design
-- Error recovery and user experience
-- Building extensible compiler tools
-- JSON as a data structure for compiler metadata
 
 ---
 
