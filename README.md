@@ -1,8 +1,8 @@
-# 🎓 Friendly C Compiler
+#  Friendly C Compiler
 
 A beginner-friendly C compiler wrapper that translates cryptic GCC error messages into clear, understandable explanations. Perfect for students learning C programming!
 
-## 🎯 Project Overview
+## Project Overview
 
 This tool wraps the GCC compiler and provides:
 - **Human-friendly error explanations** - Clear explanations of what went wrong
@@ -21,7 +21,7 @@ friendly-compiler/
 └── README.md               # This file
 ```
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 - Python 3.6 or higher
@@ -51,7 +51,7 @@ Or with custom output name:
 python friendlyCompiler.py test.c -o myprogram
 ```
 
-## 📚 Usage Examples
+##  Usage Examples
 
 ### Example 1: Basic compilation
 ```bash
@@ -61,10 +61,10 @@ python friendlyCompiler.py test.c
 **Output:**
 ```
 ======================================================================
-🎓 FRIENDLY C COMPILER
+ FRIENDLY C COMPILER
 ======================================================================
-📁 Compiling: test.c
-🎯 Output: output
+ Compiling: test.c
+ Output: output
 
 ✓ Loaded 32 error patterns from error_patterns.json
 
@@ -129,7 +129,7 @@ Shows detailed information about pattern matching for troubleshooting.
 | `-o, --output NAME` | Output executable name (default: output) |
 | `--debug` | Show debug information during translation |
 
-## 📝 Error Pattern Database Format
+##  Error Pattern Database Format
 
 The `error_patterns.json` file stores error patterns in this format:
 
@@ -219,7 +219,7 @@ if not translation['found']:
 - Auto-generate regex from LLM responses
 - Build pattern database over time
 
-## 🐛 Common Issues
+##  Common Issues
 
 ### "GCC not found"
 **Solution:** Install GCC:
